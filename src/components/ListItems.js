@@ -3,27 +3,12 @@ import React, { Component } from "react";
 class ListItems extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      todos: [
-        { id: 1, name: "Shopping", complete: false },
-        { id: 2, name: "Swimming", complete: false },
-        { id: 3, name: "Watch Movie", complete: false },
-        { id: 4, name: "Dinner", complete: false },
-        { id: 5, name: "DOTA", complete: false }
-      ]
-    };
-  }
-
-  handleCheckboxCheck(index, complete) {
-    let oldState = this.state.todos;
-    oldState[index].complete = complete;
-    this.setState({ todos: oldState });
   }
 
   render() {
     return (
       <React.Fragment>
-        {this.state.todos.map((todo, index) => (
+        {this.props.todos.map((todo, index) => (
           <div
             style={{
               backgroundColor: "#fefefe",
@@ -41,7 +26,9 @@ class ListItems extends Component {
             <input
               type="checkbox"
               checked={todo.complete}
-              onChange={() => this.handleCheckboxCheck(index, !todo.complete)}
+              onChange={() =>
+                this.props.handleCheckboxCheck(index, !todo.complete)
+              }
             />{" "}
             {!todo.complete ? todo.name : <s> {todo.name}</s>}
           </div>

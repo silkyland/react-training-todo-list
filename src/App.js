@@ -2,19 +2,14 @@ import React, { Component } from "react";
 import HeadeComponent from "./components/HeaderComponent";
 import FormSumit from "./components/FormSubmit";
 import List from "./components/List";
+import axios from "axios";
 
 class App extends Component {
   constructor() {
     super();
     this.state = {
       message: "",
-      todos: [
-        { id: 1, name: "Shopping", complete: false },
-        { id: 2, name: "Swimming", complete: false },
-        { id: 3, name: "Watch Movie", complete: false },
-        { id: 4, name: "Dinner", complete: false },
-        { id: 5, name: "DOTA", complete: false }
-      ]
+      todos: []
     };
 
     this.handleInputChange = this.handleInputChange.bind(this);
@@ -23,10 +18,23 @@ class App extends Component {
     this.handleInputChange = this.handleInputChange.bind(this);
   }
 
+  componentDidMount() {
+    axios.get("http://localhost:8080/todos").then(response => {
+      this.setState({ todos: response.data });
+    });
+  }
+
   handleCheckboxCheck(index, complete) {
     let oldState = this.state.todos;
     oldState[index].complete = complete;
-    this.setState({ todos: oldState });
+
+    axios
+      .patch(`http://localhost:8080/todos/${oldState[index].id}`, {
+        complete: complete
+      })
+      .then(response => {
+        this.setState({ todos: oldState });
+      });
   }
 
   handleInputChange(e) {
@@ -38,11 +46,13 @@ class App extends Component {
     let oldState = this.state.todos;
     let todoLength = this.state.todos.length;
     let lastId = this.state.todos[todoLength - 1].id;
-    oldState.push({
+    let message = {
       id: lastId + 1,
       name: this.state.message,
       complete: false
-    });
+    };
+    axios.post(`http://localhost:8080/todos`, message);
+    oldState.push(message);
     this.setState({ todos: oldState, message: "" });
   }
 

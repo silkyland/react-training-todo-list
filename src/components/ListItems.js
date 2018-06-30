@@ -1,4 +1,7 @@
 import React from "react";
+import { connect } from "react-redux";
+import { handleCheckboxCheck } from "../store/actions/todo";
+
 const ListItems = props => (
   <React.Fragment>
     {props.todos.map((todo, index) => (
@@ -19,12 +22,27 @@ const ListItems = props => (
         <input
           type="checkbox"
           checked={todo.complete}
-          onChange={() => props.handleCheckboxCheck(index, !todo.complete)}
+          onChange={() =>
+            props.handleCheckboxCheck({
+              index: index,
+              complete: !todo.complete
+            })
+          }
         />{" "}
         {!todo.complete ? todo.name : <s> {todo.name}</s>}
       </div>
     ))}
   </React.Fragment>
 );
+const mapStateToProps = state => ({
+  todos: state.todos.todos
+});
 
-export default ListItems;
+const mapDispatchToProps = dispatch => ({
+  handleCheckboxCheck: data => dispatch(handleCheckboxCheck(data))
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(ListItems);

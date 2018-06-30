@@ -1,5 +1,4 @@
 import React from "react";
-
 const ListItems = props => (
   <React.Fragment>
     {props.todos.map((todo, index) => (
